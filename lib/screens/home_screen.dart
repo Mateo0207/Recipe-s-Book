@@ -1,0 +1,310 @@
+import 'package:flutter/material.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          _recipesCard(context),
+          _recipesCard(context),
+          _recipesCard(context),
+          _recipesCard(context),
+        ],
+      ),
+
+
+      //Botón flotante parte inferior
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        // para dejar redondo el botón
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+          //side: BorderSide(color: Colors.white, width: 3) // dejar el borde del circulo blanco 
+        ),
+        child: Icon(Icons.add, color: Colors.white, size: 30,),
+        //Cuando se oprima el botón
+        onPressed: () {
+          _showBottom(context); // llamado del modal
+        },
+      ),
+    );
+  }
+
+
+
+  //Creación del modal redondeado
+ Future<void> _showBottom(BuildContext context) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      // Se agrega shape para redondear en la parte superior
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20), // Borde redondeado en la parte superior
+        ),
+      ),
+      builder:
+          (contexto) => Container(
+                width: MediaQuery.of(context).size.width,
+                height: 600,
+                // se agrega un Bodecoration para asegurarse que el container tambien tenga bordes redondos
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20), // Aplica el borde aquí también
+                  ),
+                ),
+
+                
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // indicador redondeado en la parte superior del modal
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top:12), // margen superior
+                      width: 80, // ancho 
+                      height: 8, // alto 
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    
+                    const Expanded(
+                      child:RecipeForm(), // Se hace el llamado del formulario dentro del modal
+                    )
+                   
+                    
+                  ],
+                  
+                )
+                          
+          ),
+    );
+  }
+
+  // Card de las recetas
+  Widget _recipesCard(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        
+        width: MediaQuery.of(context).size.width,
+        height: 120, // maneja el tamaño de la card
+        child: Card(
+          child: Row(
+            children: <Widget>[
+              Container(
+                height: 125,
+                width: 100,
+                /*decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.orange
+
+                    )*/
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+
+                  //child: Image.network('https://www.paulinacocina.net/wp-content/uploads/2020/01/untitled-copy.jpg',
+                  child: Image.asset('assets/tacos.jpg', fit: BoxFit.cover),
+                ),
+              ),
+
+              SizedBox(width: 26),
+              Column(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, //Organizar de forma vertical
+                crossAxisAlignment:
+                    CrossAxisAlignment
+                        .start, //Organizar de forma horizontal en el inicio
+                children: <Widget>[
+                  Text(
+                    "Lasagna",
+                    style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Julian Bosa",
+                    style: TextStyle(fontSize: 14, fontFamily: 'Poppins'),
+                  ),
+                  SizedBox(height: 4),
+                  Container(height: 1, width: 75, color: Colors.orange),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Formulario
+class RecipeForm extends StatelessWidget {
+  
+  const RecipeForm({super.key});
+ 
+  @override
+  Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>(); // para guardar y validar los datos en el formulario
+    
+    // para cada campos en el formulario se necesita un controlador para que cada campo sea editado y guardado
+    // después se agregan los controladores a cada textField
+    final TextEditingController _recipeName = TextEditingController();
+    final TextEditingController _recipeAuthor = TextEditingController();
+    final TextEditingController _recipeIMG = TextEditingController();
+    final TextEditingController _recipeDescription = TextEditingController();
+
+
+
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Add new recipe',
+              style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold ),
+            ),
+            Text(
+              'Enter the data for the new recipe',
+              style: TextStyle(color: Colors.black, fontSize: 18),
+            ),
+
+
+            
+            SizedBox(height: 16), // espaciado entre texto y label
+            
+            // Label Nombre
+            _buildTextField(
+              controller:_recipeName,
+              label: 'Recipe Name',
+              validator: (value){
+                if (value == null || value.isEmpty){
+                  return 'Please enter the name recipe'; // se hace este condicional con el fin de verificar el campo si esta vacio
+                }
+              return null;
+              // cuando validator aparece con error es por que se tiene que agregar a la widget personalizada que se creo anteriormente, igualmente sucede con el controller
+            }),
+
+
+
+            SizedBox(height: 12), // espaciado entre label
+
+            // Label autor
+            _buildTextField(
+              controller:_recipeAuthor,
+              label: 'Author',
+              validator: (value){
+                if (value == null || value.isEmpty){
+                return 'Please enter the author'; // se hace este condicional con el fin de verificar el campo si esta vacio
+                }
+              
+              return null;
+              // cuando validator aparece con error es por que se tiene que agregar a la widget personalizada que se creo anteriormente, igualmente sucede con el controller
+            }),
+
+
+            SizedBox(height: 12), // espaciado entre label
+
+            // label Imagen URL
+            _buildTextField(
+              controller:_recipeIMG,
+              label: 'Image URL',
+              validator: (value){
+                if (value == null || value.isEmpty){
+                  return 'Please enter the Image URL'; // se hace este condicional con el fin de verificar el campo si esta vacio
+                }
+                return null;
+              // cuando validator aparece con error es por que se tiene que agregar a la widget personalizada que se creo anteriormente, igualmente sucede con el controller
+            }),
+
+
+
+            SizedBox(height: 12), // espaciado entre label
+
+            // Label descripción receta
+            _buildTextField(
+              maxLines: 4,
+              controller:_recipeDescription,
+              label: 'Description',
+              validator: (value){
+                if (value == null || value.isEmpty){
+                  return 'Please enter the recipe description'; // se hace este condicional con el fin de verificar el campo si esta vacio
+                }
+                return null;
+              // cuando validator aparece con error es por que se tiene que agregar a la widget personalizada que se creo anteriormente, igualmente sucede con el controller
+            }          
+            
+            ),
+
+
+            SizedBox(height: 12), // espaciado entre label
+
+            // botóm para enviar, se agrega center para que el botón esté centrado
+            Center(
+              child: ElevatedButton(
+                // Cuando se oprima el botón se llama la llave del form y se menciona el estado se valida si esta lleno o vacio
+                // el formkey contiene el estado del formulario, currentState es el estado mas cercano
+                // si el estado no se encuentra se llama al validate
+                onPressed: (){
+                  if(_formKey.currentState!.validate()){
+                  Navigator.pop(context); // se cierra el formulario cuando ya no se necesita
+
+                  }
+                },
+                
+                // decoración del botón
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+                ),
+                //Styles para el titulo del botón
+                child: 
+                Text('Save Recipe', 
+                style: TextStyle(
+                  color: Colors.white, 
+                  fontSize: 16, 
+                  fontWeight: FontWeight.bold),)),
+            )
+            
+          ],
+        ),
+      ),
+    );
+  }
+
+  // widget personalizada label para ingresar receta
+  Widget _buildTextField({
+  required String label,
+  required TextEditingController controller, 
+  required String? Function(String?)validator,
+  int maxLines = 1}) 
+  {
+    return TextFormField(
+      decoration: InputDecoration(
+        // se ingresa el label
+        labelText: label,
+        // se le da estilo al label
+        labelStyle: TextStyle(fontFamily: 'Quicksand', color: const Color.fromARGB(255, 0, 0, 0)),
+        // Cuando esta sin seleccionar
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        // Cuando esta en estado focus
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black, width: 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      validator: validator,
+      maxLines: maxLines,
+
+      
+    );
+  }
+}

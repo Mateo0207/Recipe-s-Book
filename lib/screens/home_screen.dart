@@ -36,56 +36,57 @@ class HomeScreen extends StatelessWidget {
 
 
   //Creación del modal redondeado
- Future<void> _showBottom(BuildContext context) {
-    return showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      // Se agrega shape para redondear en la parte superior
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20), // Borde redondeado en la parte superior
-        ),
+  Future<void> _showBottom(BuildContext context) {
+  return showModalBottomSheet(
+    isScrollControlled: true,
+    context: context,
+    // Se agrega shape para redondear en la parte superior
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(20), // Borde redondeado en la parte superior
       ),
-      builder:
-          (contexto) => Container(
-                width: MediaQuery.of(context).size.width,
-                height: 600,
-                // se agrega un Bodecoration para asegurarse que el container tambien tenga bordes redondos
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20), // Aplica el borde aquí también
-                  ),
-                ),
-
-                
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  // indicador redondeado en la parte superior del modal
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top:12), // margen superior
-                      width: 80, // ancho 
-                      height: 8, // alto 
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    
-                    const Expanded(
-                      child:RecipeForm(), // Se hace el llamado del formulario dentro del modal
-                    )
-                   
-                    
-                  ],
-                  
-                )
-                          
+    ),
+    builder: (contexto) => Wrap( // Permite que el modal se ajuste dinámicamente
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          //height: 600,
+          // se agrega un Boxdecoration para asegurarse que el container tambien tenga bordes redondos
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(20), // Aplica el borde aquí también
+            ),
           ),
-    );
-  }
+          child: Padding( //Permite que el modal suba con el teclado
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom), // permite ajustar el espacio  en la parte inferior de un widget cuando aparece el teclado
+            child: SingleChildScrollView( // Habilita desplazamiento interno
+              physics: BouncingScrollPhysics(), // Mejora la fluidez del scroll
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag, // Oculta el teclado al desplazar
+              child: Column(
+                mainAxisSize: MainAxisSize.min, // Permite que el modal se ajuste al contenido
+                // indicador redondeado en la parte superior del modal
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top:12), // margen superior
+                    width: 80, // ancho 
+                    height: 8, // alto 
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const RecipeForm(), // Se hace el llamado del formulario dentro del modal
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   // Card de las recetas
   Widget _recipesCard(BuildContext context) {

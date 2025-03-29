@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/screens/recipe_detail.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -90,53 +91,58 @@ class HomeScreen extends StatelessWidget {
 
   // Card de las recetas
   Widget _recipesCard(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        
-        width: MediaQuery.of(context).size.width,
-        height: 120, // maneja el tamaño de la card
-        child: Card(
-          child: Row(
-            children: <Widget>[
-              Container(
-                height: 125,
-                width: 100,
-                /*decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.orange
-
-                    )*/
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-
-                  //child: Image.network('https://www.paulinacocina.net/wp-content/uploads/2020/01/untitled-copy.jpg',
-                  child: Image.asset('assets/tacos.jpg', fit: BoxFit.cover),
+    return GestureDetector( // se coloca el gesture detector para oprimir e ir a la otra pantalla para detalles
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RecipeDetail(recipeName:'Lasagna'))); // para ir a la otra pantalla --- con recipeName:'Lasagna' podemos enviar y recibir información, esta variable se declara en la otra pantalla de recipe_detail
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          
+          width: MediaQuery.of(context).size.width,
+          height: 120, // maneja el tamaño de la card
+          child: Card(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  height: 125,
+                  width: 100,
+                  /*decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.orange
+      
+                      )*/
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+      
+                    //child: Image.network('https://www.paulinacocina.net/wp-content/uploads/2020/01/untitled-copy.jpg',
+                    child: Image.asset('assets/tacos.jpg', fit: BoxFit.cover),
+                  ),
                 ),
-              ),
-
-              SizedBox(width: 26),
-              Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, //Organizar de forma vertical
-                crossAxisAlignment:
-                    CrossAxisAlignment
-                        .start, //Organizar de forma horizontal en el inicio
-                children: <Widget>[
-                  Text(
-                    "Lasagna",
-                    style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Julian Bosa",
-                    style: TextStyle(fontSize: 14, fontFamily: 'Poppins'),
-                  ),
-                  SizedBox(height: 4),
-                  Container(height: 1, width: 75, color: Colors.orange),
-                ],
-              ),
-            ],
+      
+                SizedBox(width: 26),
+                Column(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, //Organizar de forma vertical
+                  crossAxisAlignment:
+                      CrossAxisAlignment
+                          .start, //Organizar de forma horizontal en el inicio
+                  children: <Widget>[
+                    Text(
+                      "Lasagna",
+                      style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "Julian Bosa",
+                      style: TextStyle(fontSize: 14, fontFamily: 'Poppins'),
+                    ),
+                    SizedBox(height: 4),
+                    Container(height: 1, width: 75, color: Colors.orange),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

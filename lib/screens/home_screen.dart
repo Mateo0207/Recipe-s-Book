@@ -1,20 +1,50 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/screens/recipe_detail.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  // llamado a la API
+  Future <List<dynamic>> FetchRecipes()async{
+    // puertos: Android 10.0.2.2
+    // iOS: 127.0.0.1
+    // WEB: 'http://localhost:12345/recipes'
+    final url = Uri.parse('http://10.0.2.2:12345/recipes');
+    final response = await http.get(url); // capturar la respuesta de la API
+    final data = jsonDecode(response.body); // aca traemos la información de la rta en un body
+    return data ['recipes'];
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    //FetchRecipes(); // cada vez que se construya la pantalla nos muestre la data que se solicita
     return Scaffold(
-      body: Column(
+      body:
+      // Se recibe los datos traidos del json
+      FutureBuilder<List<dynamic>>(
+        future: FetchRecipes(), 
+        builder: (context, snapshot){
+          final recipes = snapshot.data ?? []; // asi se valida si el dato llega vacío o no, y si llega vacio que no nos muestre null si no una lista vacía
+          return ListView.builder(
+            itemCount: recipes.length,
+            itemBuilder: (context, index){
+            return _recipesCard(context,recipes[index]);
+            });
+        }
+        )
+      ,
+      /*Column(
         children: <Widget>[
           _recipesCard(context),
           _recipesCard(context),
           _recipesCard(context),
           _recipesCard(context),
         ],
-      ),
+      ),*/
 
 
       //Botón flotante parte inferior
@@ -90,33 +120,31 @@ class HomeScreen extends StatelessWidget {
 }
 
   // Card de las recetas
-  Widget _recipesCard(BuildContext context) {
+  Widget _recipesCard(BuildContext context, dynamic recipe) {
     return GestureDetector( // se coloca el gesture detector para oprimir e ir a la otra pantalla para detalles
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RecipeDetail(recipeName:'Lasagna'))); // para ir a la otra pantalla --- con recipeName:'Lasagna' podemos enviar y recibir información, esta variable se declara en la otra pantalla de recipe_detail
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RecipeDetail(recipeName:recipe['name']))); // para ir a la otra pantalla --- con recipeName:'Lasagna' podemos enviar y recibir información, esta variable se declara en la otra pantalla de recipe_detail
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
+        child: SizedBox(
           
           width: MediaQuery.of(context).size.width,
           height: 120, // maneja el tamaño de la card
           child: Card(
             child: Row(
               children: <Widget>[
-                Container(
+                SizedBox(
                   height: 125,
                   width: 100,
-                  /*decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.orange
-      
-                      )*/
+                  
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
       
-                    //child: Image.network('https://www.paulinacocina.net/wp-content/uploads/2020/01/untitled-copy.jpg',
-                    child: Image.asset('assets/tacos.jpg', fit: BoxFit.cover),
+                    child: Image.network(
+                      recipe['image_link'],
+                      fit:BoxFit.cover,
+                    ),
                   ),
                 ),
       
@@ -129,16 +157,26 @@ class HomeScreen extends StatelessWidget {
                           .start, //Organizar de forma horizontal en el inicio
                   children: <Widget>[
                     Text(
-                      "Lasagna",
+                      recipe['name'],
+                      //"Lasagna",
                       style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
                     ),
                     SizedBox(height: 4),
+                    Container(height: 1, width: 75, color: Colors.orange),
                     Text(
-                      "Julian Bosa",
+                      recipe['author'],
+                      //"Julian Bosa",
                       style: TextStyle(fontSize: 14, fontFamily: 'Poppins'),
                     ),
                     SizedBox(height: 4),
-                    Container(height: 1, width: 75, color: Colors.orange),
+                    /*
+                    Text(
+                      recipe['description'],
+                      style: TextStyle(fontSize: 12, fontFamily: 'Poppins'),
+                      textAlign:context
+                    )
+                    */
+                    
                   ],
                 ),
               ],

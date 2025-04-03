@@ -1,59 +1,38 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/provider/recipes_provider.dart';
 import 'package:flutter_app2/screens/recipe_detail.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // llamado a la API
-  Future <List<dynamic>> FetchRecipes()async{
-    // puertos: Android 10.0.2.2
-    // iOS: 127.0.0.1
-    // WEB: 'http://localhost:12345/recipes'
-    final url = Uri.parse('http://10.0.2.2:12345/recipes');
-    // manejo de cara a nuestra llamada
-    try {
-      final response = await http.get(url); // capturar la respuesta de la API
-      if (response.statusCode ==200) {
-        final data = jsonDecode(response.body); // aca traemos la información de la rta en un body
-      return data ['recipes'];        
-      } else{
-        print('Error ${response.statusCode}');
-        return []; // retornamos una lista vacia indicando que no se estan consumiendo datos
-      }
-    } catch (e) {
-      print('Error in request');
-      return []; 
-      
-    }
-    
-    
-  }
-
+  
   @override
   Widget build(BuildContext context) {
+    //llamado al provider
+    final recipesProvider = Provider.of<RecipesProvider>(context,listen: false);
+    recipesProvider.fetchRecipes();
     //FetchRecipes(); // cada vez que se construya la pantalla nos muestre la data que se solicita
     return Scaffold(
       body:
       // Se recibe los datos traidos del json
-      FutureBuilder<List<dynamic>>(
-        future: FetchRecipes(), 
-        builder: (context, snapshot){
-          final recipes = snapshot.data ?? []; // asi se valida si el dato llega vacío o no, y si llega vacio que no nos muestre null si no una lista vacía
-          // caso de error si la información se queda cargando, manejo de errores de cara al cliente
-          if(snapshot.connectionState == ConnectionState.waiting){
+      Consumer<RecipesProvider>(
+        builder: (context,provider, child){
+          if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator(),);
-
-          } else if(!snapshot.hasData || snapshot.data!.isEmpty){
+            
+          }
+          else if(provider.recipes.isEmpty){
             return const Center(child: Text('No recipes found'),);
 
           } else {
             return ListView.builder( // Permite mostrar una lista de datos larga de forma optima
-            itemCount: recipes.length,
+            itemCount: provider.recipes.length,
             itemBuilder: (context, index){
-            return _recipesCard(context,recipes[index]);
+            return _recipesCard(context,provider.recipes[index]);
             });
           }
 
@@ -148,7 +127,7 @@ class HomeScreen extends StatelessWidget {
   Widget _recipesCard(BuildContext context, dynamic recipe) {
     return GestureDetector( // se coloca el gesture detector para oprimir e ir a la otra pantalla para detalles
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RecipeDetail(recipeName:recipe['name']))); // para ir a la otra pantalla --- con recipeName:'Lasagna' podemos enviar y recibir información, esta variable se declara en la otra pantalla de recipe_detail
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RecipeDetail(recipeName:recipe.name))); // para ir a la otra pantalla --- con recipeName:'Lasagna' podemos enviar y recibir información, esta variable se declara en la otra pantalla de recipe_detail
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -167,7 +146,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
       
                     child: Image.network(
-                      recipe['image_link'],
+                      recipe.image_link,
                       fit:BoxFit.cover,
                     ),
                   ),
@@ -178,22 +157,22 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment:
                       MainAxisAlignment.center, //Organizar de forma vertical
                   crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start, //Organizar de forma horizontal en el inicio
+                      CrossAxisAlignment.start, //Organizar de forma horizontal en el inicio
                   children: <Widget>[
                     Text(
-                      recipe['name'],
+                      recipe.name,
                       //"Lasagna",
                       style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
                     ),
                     SizedBox(height: 4),
                     Container(height: 1, width: 75, color: Colors.orange),
                     Text(
-                      recipe['author'],
+                      recipe.author,
                       //"Julian Bosa",
                       style: TextStyle(fontSize: 14, fontFamily: 'Poppins'),
                     ),
                     SizedBox(height: 4),
+                    
                     /*
                     Text(
                       recipe['description'],

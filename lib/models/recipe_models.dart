@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 // un modelo define los atributos que un conjunto de datos que debe tener
 
 

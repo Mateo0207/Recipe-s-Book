@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/provider/recipes_provider.dart';
 import 'package:flutter_app2/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(const MyApp());
 
@@ -8,10 +10,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false, //esconder la marca de agua
-      title: "hola Mundo",
-      home: RecipeBook(),
+    return MultiProvider(
+      // se envuelve en un widget y se agrega el multiprovider, se llama el notificador para llamar el provider y que toda la app lo escuche
+      providers: [ChangeNotifierProvider(create: (_) => RecipesProvider())],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false, //esconder la marca de agua
+        title: "hola Mundo",
+        home: RecipeBook(),
+      ),
     );
   }
 }

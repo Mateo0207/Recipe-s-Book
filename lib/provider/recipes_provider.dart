@@ -9,6 +9,7 @@ class RecipesProvider extends ChangeNotifier{
   bool isLoading = false;
   // se guardan las recetas en una lista
   List<Recipe> recipes =[];
+  List<Recipe> favoriteRecipe =[];
 
 
    // llamado a la API
@@ -43,7 +44,33 @@ class RecipesProvider extends ChangeNotifier{
         
   }
 
+  Future<void> toggleFavoriteStatus(Recipe recipe) async{
+    final isFavorite = favoriteRecipe.contains(recipe);
 
+    try {
+      final url = Uri.parse('http://10.0.2.2:12345/favorites');
+      final reponse = isFavorite ? 
+        await http.delete(url,body: json.encode({'id': recipe.id})) // para eliminar de favoritos
+        : await http.post(url,body: json.encode(recipe.toJson())); // para llenar favoritos
+      if (reponse.statusCode == 200) {
+        if (isFavorite) {
+          favoriteRecipe.remove(recipe);
+          
+        } else {
+          favoriteRecipe.add(recipe);
+        }
+        notifyListeners();
+        
+      }
+      else{
+        throw Exception('Failed to update favorite recipes');
+      }
+    } catch (e) {
+      print('Error updating favorite status: $e');
+      
+      
+    }
+  }
 
 
 }

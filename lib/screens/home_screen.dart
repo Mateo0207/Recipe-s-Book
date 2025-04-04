@@ -127,7 +127,7 @@ class HomeScreen extends StatelessWidget {
   Widget _recipesCard(BuildContext context, dynamic recipe) {
     return GestureDetector( // se coloca el gesture detector para oprimir e ir a la otra pantalla para detalles
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RecipeDetail(recipeName:recipe.name))); // para ir a la otra pantalla --- con recipeName:'Lasagna' podemos enviar y recibir información, esta variable se declara en la otra pantalla de recipe_detail
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RecipeDetail(recipesData:recipe))); // para ir a la otra pantalla --- con recipeName:'Lasagna' podemos enviar y recibir información, esta variable se declara en la otra pantalla de recipe_detail
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -341,7 +341,7 @@ class RecipeForm extends StatelessWidget {
         // se ingresa el label
         labelText: label,
         // se le da estilo al label
-        labelStyle: TextStyle(fontFamily: 'Quicksand', color: const Color.fromARGB(255, 0, 0, 0)),
+        labelStyle: TextStyle(fontFamily: 'Proppins', color: const Color.fromARGB(255, 0, 0, 0)),
         // Cuando esta sin seleccionar
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         // Cuando esta en estado focus

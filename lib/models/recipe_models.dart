@@ -2,6 +2,7 @@
 
 
 class Recipe {
+  int id;
   String name;
   String author;
   String image_link;
@@ -10,6 +11,7 @@ class Recipe {
   List<String> recipeSteps;
 
   Recipe({
+    required this.id,
     required this.name,
     required this.author,
     required this.image_link,
@@ -21,6 +23,7 @@ class Recipe {
   // manejo y cambio de estado de la clase
   factory Recipe.fromJSON(Map<String, dynamic> json) {
     return Recipe(
+      id: json['id'],
       name: json['name'],
       author: json['author'],
       image_link: json['image_link'],
@@ -33,6 +36,7 @@ class Recipe {
   // consersor
   Map<String, dynamic> toJson(){
     return{
+      'id': id,
       'name': name,
       'author': author,
       'image_linkg': image_link,
@@ -45,7 +49,7 @@ class Recipe {
   // se agrega el override para que cada que se imprima poder verlas en nuestra consola
   @override
   String toString (){
-    return 'Recipe{name:$name, $author, $image_link,$description, $preparation_time, steps:$recipeSteps}';
+    return 'Recipe{id:$id,name:$name, $author, $image_link,$description, $preparation_time, steps:$recipeSteps}';
   }
 
 }

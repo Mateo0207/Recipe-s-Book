@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/provider/recipes_provider.dart';
+import 'package:flutter_app2/screens/favorite_recipes.dart';
 import 'package:flutter_app2/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -91,7 +92,7 @@ class RecipeBook extends StatelessWidget {
               ]),
         ),
       
-        body: TabBarView(children: [HomeScreen()]),
+        body: TabBarView(children: [HomeScreen(), FavoriteRecipes()]),
       ),
     );
   }

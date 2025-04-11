@@ -22,8 +22,10 @@ class FavoriteRecipes extends StatelessWidget {
           : ListView.builder(
               itemCount: favoritesRecipes.length, // cuente cuantos items tenemos
               itemBuilder: (context, index){
+                //return Center(child: Text('No favorites recipes'),); // prueba a ver si trae info
+                //return Text(favoritesRecipes[index].toString()); // prueba 2 para ver si trae info
                 final recipe = favoritesRecipes[index]; // colocar la información de la receta
-                favoriteRecipesCard(recipe: recipe);
+                return favoriteRecipesCard(recipe: recipe);
 
               },
               );

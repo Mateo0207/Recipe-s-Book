@@ -27,7 +27,7 @@ class _RecipeDetailState extends State<RecipeDetail> with SingleTickerProviderSt
   super.initState();
   //declaracion de los controladores, aca se indica cuando va a ser el inicio y el final de la animación
   _controller =AnimationController(vsync: this,
-  duration: Duration(milliseconds: 300)
+  duration: Duration(milliseconds: 300) 
   );
 
   // con esta se controla lo que pasa medio de la duración anterior
@@ -74,16 +74,11 @@ class _RecipeDetailState extends State<RecipeDetail> with SingleTickerProviderSt
             });
           }, 
           // se agrega animación al botón de favoritos
-          icon: AnimatedSwitcher(duration: Duration(milliseconds: 300), 
-          transitionBuilder: (child, animation){
-            return ScaleTransition(
-              scale: animation, 
-              child: child,);
-          },
-           child: Icon(
+          icon: ScaleTransition(
+            scale: _scaleAnimation, 
+            child: Icon(
             isFavorite?Icons.favorite: 
             Icons.favorite_border,
-            key: ValueKey<bool>(isFavorite), // para agregarle el cambio de color en la animación
             color:Colors.red,))
           )
          

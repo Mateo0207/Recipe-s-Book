@@ -1,0 +1,6 @@
+{
+    "@@locale": "en",
+    "title": "Recipes Book",
+    "noRecipes": "No recipes found",
+    "noFavorites": "No favorite recipes found"
+}

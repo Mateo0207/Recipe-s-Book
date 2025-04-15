@@ -3,6 +3,7 @@ import 'package:flutter_app2/models/recipe_models.dart';
 import 'package:flutter_app2/provider/recipes_provider.dart';
 import 'package:flutter_app2/screens/recipe_detail.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class FavoriteRecipes extends StatelessWidget {
@@ -18,7 +19,7 @@ class FavoriteRecipes extends StatelessWidget {
           final favoritesRecipes = RecipesProvider.favoriteRecipe;
 
           return favoritesRecipes.isEmpty ?
-            Center(child: Text('No favorites recipes'),)
+            Center(child: Text(AppLocalizations.of(context)!.noRecipes),) // mostramos informacion del l10n
           : ListView.builder(
               itemCount: favoritesRecipes.length, // cuente cuantos items tenemos
               itemBuilder: (context, index){
@@ -49,14 +50,28 @@ class favoriteRecipesCard extends StatelessWidget {
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) => RecipeDetail(recipesData: recipe))); // push con ventana de detalle con la ventana e receta, se construye la ventana de recetas
       },
-      child: Card(
-        color: Colors.white,
-        child: Column(
-          children: [
-            Text(recipe.name),
-            Text(recipe.author),
-          ],
-         ),
+      child: Semantics(
+        label: 'Tajeta de recetas',
+        hint: 'Toca para ver detalle de receta ${recipe.name}',
+        child: Card(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                child: Image.network(
+                  recipe.image_link,
+                  fit:BoxFit.fill,
+                ),
+              ),
+              Text(recipe.name, style: TextStyle(
+                color: Colors.orange, fontFamily: 'Poppins', fontWeight: FontWeight.bold,fontSize: 18,
+              ),),
+              Text(recipe.author),
+            ],
+           ),
+        ),
       ),
 
     );

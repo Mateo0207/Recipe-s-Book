@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app2/provider/recipes_provider.dart';
 import 'package:flutter_app2/screens/favorite_recipes.dart';
 import 'package:flutter_app2/screens/home_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -15,6 +16,14 @@ class MyApp extends StatelessWidget {
       // se envuelve en un widget y se agrega el multiprovider, se llama el notificador para llamar el provider y que toda la app lo escuche
       providers: [ChangeNotifierProvider(create: (_) => RecipesProvider())],
       child: const MaterialApp(
+        localizationsDelegates: [
+          //importe de localizaciones para idioma
+          AppLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+
+        ],
         debugShowCheckedModeBanner: false, //esconder la marca de agua
         title: "hola Mundo",
         home: RecipeBook(),

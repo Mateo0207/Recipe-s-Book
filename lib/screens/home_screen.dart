@@ -5,6 +5,7 @@ import 'package:flutter_app2/provider/recipes_provider.dart';
 import 'package:flutter_app2/screens/recipe_detail.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,7 +27,7 @@ class HomeScreen extends StatelessWidget {
             
           }
           else if(provider.recipes.isEmpty){
-            return const Center(child: Text('No recipes found'),);
+            return Center(child: Text(AppLocalizations.of(context)!.noRecipes),);// mostramos informacion del l10n
 
           } else {
             return ListView.builder( // Permite mostrar una lista de datos larga de forma optima
